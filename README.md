@@ -96,9 +96,11 @@ allowed_groups = []
 
 #### Napcat 配置指南
 
-![选择http服务器](Napcat配置详解1.png)
+选择http服务器
+![Napcat配置详解1](Napcat配置详解1.png)
 
-![启用后保存](Napcat配置详解2.png)
+启用后保存
+![Napcat配置详解2](Napcat配置详解2.png)
 
 名称随意。host与port选项与config.toml保持一致，如设置了token请一并配置到config.toml。
 
@@ -123,7 +125,7 @@ allowed_groups = []
 - **`text.json`**：图片对应的描述文本，格式为 JSON 数组，每项含 `filename` 和 `text`
 - **`user_pig_cache.json`**：自动生成，记录每日抽取结果和原始群名片
 
-本项目已有的图片下载自pighub（https://pighub.top/），图片对应的描述文本均为ai生成。
+本项目已有的图片下载自pighub（https://pighub.top），图片对应的描述文本均为ai生成。
 记录每日抽取结果和群友原始群名片的缓存文件中，同一个用户在不同群聊之间的数据不互通。
 
 ---
