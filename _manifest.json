@@ -1,0 +1,77 @@
+{
+  "manifest_version": 1,
+  "name": "今日猪猪 (Pighub)",
+  "version": "1.0.0",
+  "description": "每日随机抽取一只猪猪图片并发送，支持 @群友为别人抽取，群名片互动玩法。",
+  "author": {
+    "name": "NymphSong"
+  },
+  "license": "MIT",
+  "host_application": {
+    "name": "MaiBot",
+    "min_version": "0.10.0"
+  },
+  "keywords": [
+    "pighub",
+    "猪猪",
+    "图片",
+    "随机",
+    "娱乐",
+    "每日"
+  ],
+  "categories": [
+    "Entertainment",
+    "Image"
+  ],
+  "default_locale": "zh-CN",
+  "plugin_info": {
+    "is_built_in": false,
+    "plugin_type": "entertainment",
+    "components": [
+      {
+        "type": "command",
+        "name": "今日猪猪",
+        "description": "随机抽取一张猪猪图片和对应的文字，每人每天首次抽取会缓存结果",
+        "pattern": "/今日猪猪",
+        "usage": "/今日猪猪 [@某人]",
+        "examples": [
+          "/今日猪猪 - 为自己抽取今日猪猪",
+          "@张三 /今日猪猪 - 为张三抽取今日猪猪"
+        ]
+      },
+      {
+        "type": "command",
+        "name": "刷新今日猪猪",
+        "description": "清除缓存并重新抽取今日猪猪",
+        "pattern": "/刷新今日猪猪",
+        "usage": "/刷新今日猪猪",
+        "examples": [
+          "/刷新今日猪猪 - 清除今日缓存并重新抽取",
+          "@张三 /刷新今日猪猪 - 为张三刷新今日猪猪"
+        ]
+      }
+    ],
+    "features": [
+      "每日随机抽取猪猪图片",
+      "配套对应猪猪的描述",
+      "每人每日缓存，避免重复",
+      "支持@群友为他人抽取",
+      "支持调用 NapCat HTTP API 发送图片"
+    ],
+    "dependencies": {
+      "python": [],
+      "plugins": [],
+      "external_api": []
+    },
+    "config": {
+      "config_file": "config.toml",
+      "has_default_config": true
+    }
+  },
+  "permissions": [
+    "send.image",
+    "send.text",
+    "network.http"
+  ],
+  "id": "NymphSong.Pighub_plugin"
+}
