@@ -4,24 +4,22 @@
   "version": "1.0.0",
   "description": "每日随机抽取一只猪猪图片并发送，支持 @群友为别人抽取，群名片互动玩法。",
   "author": {
-    "name": "NymphSong"
+    "name": "NymphSong",
+    "url": "https://github.com/NymphSong"
   },
   "license": "MIT",
   "host_application": {
-    "name": "MaiBot",
     "min_version": "0.10.0"
   },
+  "homepage_url": "",
+  "repository_url": "https://github.com/NymphSong/Pighub_plugin",
   "keywords": [
     "pighub",
-    "猪猪",
-    "图片",
-    "随机",
-    "娱乐",
-    "每日"
+    "今日猪猪",
+    "娱乐"
   ],
   "categories": [
-    "Entertainment",
-    "Image"
+    "Entertainment & Interaction"
   ],
   "default_locale": "zh-CN",
   "plugin_info": {
@@ -58,20 +56,10 @@
       "支持@群友为他人抽取",
       "支持调用 NapCat HTTP API 发送图片"
     ],
-    "dependencies": {
-      "python": [],
-      "plugins": [],
-      "external_api": []
-    },
     "config": {
       "config_file": "config.toml",
       "has_default_config": true
     }
   },
-  "permissions": [
-    "send.image",
-    "send.text",
-    "network.http"
-  ],
   "id": "NymphSong.Pighub_plugin"
 }
