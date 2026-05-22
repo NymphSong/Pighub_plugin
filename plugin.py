@@ -26,9 +26,10 @@ class DailyRestoreCardTask(AsyncTask):
         admin_enable: bool = True,
         allowed_groups: List[str] = None,
     ):
+        seconds = self._seconds_until_midnight()
         super().__init__(
             task_name="PighubDailyRestore",
-            wait_before_start=self._seconds_until_midnight(),
+            wait_before_start=seconds,
             run_interval=86400,
         )
         self.plugin_dir = plugin_dir
@@ -58,20 +59,15 @@ class DailyRestoreCardTask(AsyncTask):
             logger.warning(f"[PighubDaily] 读取缓存失败: {e}")
             return
 
-        today = datetime.now().strftime("%Y-%m-%d")
         to_restore = []
         for key, val in list(cache.items()):
-            if val.get("date") == today:
-                group_id = key.split(":", 1)[0] if ":" in key else ""
-                # 管理员功能关闭 或 不在允许群列表中则跳过
-                if not self.admin_enable:
-                    del cache[key]
-                    continue
-                if self.allowed_groups and group_id not in self.allowed_groups:
-                    del cache[key]
-                    continue
-                to_restore.append((key, val.get("original_card", "")))
-                del cache[key]
+            group_id = key.split(":", 1)[0] if ":" in key else ""
+            # 管理员功能开启且群号在白名单（或白名单为空）才恢复
+            if self.admin_enable:
+                if not self.allowed_groups or group_id in self.allowed_groups:
+                    to_restore.append((key, val.get("original_card", "")))
+            # 全部清理掉
+            del cache[key]
 
         if not to_restore:
             logger.info("[PighubDaily] 今日无需要恢复的名片")
