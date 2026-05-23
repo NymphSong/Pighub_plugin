@@ -79,9 +79,7 @@ class DailyRestoreCardTask(AsyncTask):
         if self.napcat_token:
             headers["Authorization"] = f"Bearer {self.napcat_token}"
 
-        semaphore = asyncio.Semaphore(5)
-
-        async def _restore_one(key: str, card: str, client: httpx.AsyncClient):
+        async def _restore_one(key: str, card: str, client: httpx.AsyncClient, retry: bool = True) -> bool:
             try:
                 group_id, user_id = key.split(":", 1)
                 resp = await client.post(
@@ -96,19 +94,28 @@ class DailyRestoreCardTask(AsyncTask):
                 data = resp.json()
                 if data.get("status") == "ok" or data.get("retcode") == 0:
                     logger.info(f"[PighubDaily] 已恢复 {key} 的名片为: {card}")
+                    return True
                 else:
                     logger.warning(f"[PighubDaily] 恢复 {key} 失败: {data}")
+                    if retry:
+                        logger.info(f"[PighubDaily] 恢复 {key} 将在 3 秒后重试")
+                        await asyncio.sleep(3)
+                        return await _restore_one(key, card, client, retry=False)
+                    return False
             except Exception as e:
                 logger.error(f"[PighubDaily] 恢复 {key} 异常: {e}")
-
-        async def _restore_with_limit(key: str, card: str, client: httpx.AsyncClient):
-            async with semaphore:
-                return await _restore_one(key, card, client)
+                if retry:
+                    logger.info(f"[PighubDaily] 恢复 {key} 将在 3 秒后重试")
+                    await asyncio.sleep(3)
+                    return await _restore_one(key, card, client, retry=False)
+                return False
 
         async with httpx.AsyncClient(timeout=10.0) as client:
-            await asyncio.gather(
-                *[_restore_with_limit(k, c, client) for k, c in to_restore]
-            )
+            for idx, (key, card) in enumerate(to_restore):
+                await _restore_one(key, card, client)
+                # 串行执行，每个请求间隔 1 秒，避免触发 QQ 限流
+                if idx < len(to_restore) - 1:
+                    await asyncio.sleep(1)
 
         try:
             with open(cache_path, "w", encoding="utf-8") as f:
